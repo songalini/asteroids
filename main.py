@@ -6,7 +6,7 @@ from circleshape import *
 from player import *
 from asteroidfield import *
 from shot import *
-from score import *
+
 
 def main():
     pygame.init()
@@ -23,8 +23,11 @@ def main():
     asteroids = pygame.sprite.Group()
     shots = pygame.sprite.Group()
     score = 0
+    lives = 3
+    lives_decrement = 1
     score_increment = 1
     font = pygame.font.Font(None, 36)
+    font2 = pygame.font.Font(None, 60)
 
     Player.containers = (updateable, drawable)
     Asteroid.containers = (updateable, drawable, asteroids)
@@ -40,14 +43,22 @@ def main():
         dt = clock.tick(60) / 1000
         updateable.update(dt)
 
-        for i in asteroids:
-            if player.collision(i) == True:
-                print("Game over!")
-                sys.exit()
-
         screen.fill("black")
         for sprite in drawable:
             sprite.draw(screen)
+            
+        for i in asteroids:
+            if player.collision(i) == True:
+                if lives > 0:
+                    if player.collidable == True:
+                        player.collidable = False
+                        player.collision_timer = 3
+                        lives_lost_text = font2.render(f'Oh No!', True, (255, 255, 255))
+                        screen.blit(lives_lost_text, (100, 100))
+                        lives -= lives_decrement
+                else: 
+                    sys.exit()
+
 
         for shot in shots:
             shot.update(dt)
@@ -59,9 +70,12 @@ def main():
                     asteroid.split()
                     shot.kill()
                     score += score_increment
+
         score_text = font.render(f'Score: {score}', True, (255, 255, 255))
         screen.blit(score_text, (10, 10))
-        print(shots, asteroids, score)
+        lives_text = font.render(f'Lives: {lives}', True, (255, 255, 255))
+        screen.blit(lives_text, (10, 50))
+        print(f"collision timer: {player.collision_timer}, score = {score}")
 
         
 
