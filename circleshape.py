@@ -4,7 +4,9 @@ import pygame
 class CircleShape(pygame.sprite.Sprite):
     def __init__(self, x, y, radius):
         pygame.sprite.Sprite.__init__(self, self.containers)
-        # we will be using this later
+        self.position = pygame.Vector2(x, y)
+        self.velocity = pygame.Vector2(0, 0)
+        self.radius = radius
         if hasattr(self, "containers"):
             super().__init__(self.containers)
         else:
