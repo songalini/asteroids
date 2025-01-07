@@ -4,19 +4,51 @@ from main import *
 import random
 
 class Asteroid(CircleShape):
+    SHAPES = ["Circle", "Square", "Triangle", "Pentagon", "Hexagon"]
     def __init__(self, x, y, radius):
         super().__init__(x, y, radius)
-        self.entered_screen = False
         self.velocity = pygame.Vector2()
+        self.entered_screen = False
+        self.shape = random.choice(self.SHAPES)
 
     def draw(self, screen):
-        pygame.draw.circle(screen, "white", self.position, self.radius, width=2)
+        if self.shape == "Circle":
+            pygame.draw.circle(screen, "white", self.position, self.radius, width=2)
+        elif self.shape == "Square":
+            half_side = self.radius / 1.414  # side length of the square
+            points = [
+                (self.position.x - half_side, self.position.y - half_side),
+                (self.position.x + half_side, self.position.y - half_side),
+                (self.position.x + half_side, self.position.y + half_side),
+                (self.position.x - half_side, self.position.y + half_side)
+            ]
+            pygame.draw.polygon(screen, "white", points, width=2)
+        elif self.shape == "Triangle":
+            points = [
+                (self.position.x, self.position.y - self.radius),
+                (self.position.x - self.radius, self.position.y + self.radius),
+                (self.position.x + self.radius, self.position.y + self.radius)
+            ]
+            pygame.draw.polygon(screen, "white", points, width=2)
+        elif self.shape == "Pentagon":
+            points = self.generate_polygon(5)
+            pygame.draw.polygon(screen, "white", points, width=2)
+        elif self.shape == "Hexagon":
+            points = self.generate_polygon(6)
+            pygame.draw.polygon(screen, "white", points, width=2)
 
-
+    def generate_polygon(self, num_sides):
+        angle_step = 360 / num_sides
+        vertices = []
+        for i in range(num_sides):
+            angle = i * angle_step
+            x = self.position.x + self.radius * pygame.math.Vector2(1, 0).rotate(angle).x
+            y = self.position.y + self.radius * pygame.math.Vector2(1, 0).rotate(angle).y
+            vertices.append((x, y))
+        return vertices
     def update(self, dt):
         self.position.x += (self.velocity.x * dt)
         self.position.y += (self.velocity.y * dt)
-        self.check_entered_screen()
         self.bounce()
     
     def check_entered_screen(self):

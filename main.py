@@ -77,10 +77,13 @@ def main():
                     asteroid.split()
                     shot.kill()
                     score += score_increment
+                    if score >= 10:
+                        lives += 1
+                        score -= 10
 
-        score_text = font.render(f'Score: {score}', True, (255, 255, 255))
+        score_text = font.render(f'Scrap Gathered: {score}', True, (255, 255, 255))
         screen.blit(score_text, (10, 10))
-        lives_text = font.render(f'Lives: {lives}', True, (255, 255, 255))
+        lives_text = font.render(f'Hull Integrity: {lives}', True, (255, 255, 255))
         screen.blit(lives_text, (10, 50))
         # print(asteroids)
         # print(f"collision timer: {player.collision_timer}, score = {score}") 

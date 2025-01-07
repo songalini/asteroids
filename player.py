@@ -55,6 +55,18 @@ class Player(CircleShape):
     def move(self, dt):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         self.position += forward * PLAYER_SPEED * dt
+        self.check_boundaries()
+
+    def check_boundaries(self):
+        if self.position.x - self.radius < 0:
+            self.position.x = self.radius
+        if self.position.x + self.radius > SCREEN_WIDTH:
+            self.position.x = SCREEN_WIDTH - self.radius
+        if self.position.y - self.radius < 0:
+            self.position.y = self.radius
+        if self.position.y + self.radius > SCREEN_HEIGHT:
+            self.position.y = SCREEN_HEIGHT - self.radius
+
 
     def shoot(self):
         if self.shot_cooldown > 0:
