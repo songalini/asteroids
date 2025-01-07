@@ -5,6 +5,7 @@ import random
 
 class Asteroid(CircleShape):
     SHAPES = ["Circle", "Square", "Triangle", "Pentagon", "Hexagon"]
+
     def __init__(self, x, y, radius):
         super().__init__(x, y, radius)
         self.velocity = pygame.Vector2()
@@ -49,6 +50,7 @@ class Asteroid(CircleShape):
     def update(self, dt):
         self.position.x += (self.velocity.x * dt)
         self.position.y += (self.velocity.y * dt)
+        self.check_entered_screen()
         self.bounce()
     
     def check_entered_screen(self):
